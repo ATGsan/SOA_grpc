@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package mafia;
+
+service mafiaService {
+  // first RPC to set new user in server
+  rpc setNickName(nick) returns(gameRequest);
+  // RPC to display all users in session
+  rpc getUsers(gameRequest) returns (stream displayUser);
+  // RPC to delete user from session
+  rpc deleteUser(empty) returns (stream displayUser);
+  // notice of game start
+  rpc sessionStart(roleRequest) returns (gameStart);
+
+  rpc getState(nick) returns (status);
+
+  rpc makeVote(vote) returns (empty);
+
+  rpc endNotifier(empty) returns (gameResult);
+
+  rpc kill(vote) returns (empty);
+}
+
+message nick {
+  string nick_name = 1;
+}
+
+message gameRequest {
+  uint64 game = 1;
+}
+
+message roleRequest {
+  string nick_name = 1;
+  uint64 game = 2;
+}
+
+message displayUser {
+  string user_name = 1;
+}
+
+message gameStart {
+  bool normal_start = 1;
+}
+
+message status {
+  string role = 1;
+}
+
+message vote {
+  uint32 player = 1;
+  uint32 game = 2;
+}
+
+message voteResult {
+  uint32 player = 1;
+}
+
+message gameResult {
+  bool mafia = 1;
+}
+
+message empty {}
